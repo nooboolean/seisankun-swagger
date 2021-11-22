@@ -1,0 +1,808 @@
+openapi: 3.0.0
+info:
+  title: seisankun_api_v2
+  version: '1.0'
+  description: 旅の立て替え清算を管理してくれる「清算くん」のバックエンドAPI
+  contact:
+    name: nooboolean
+    url: 'https://twitter.com/nooboolean'
+  termsOfService: 'https://seisan-kun.netlify.app/#/tos'
+servers:
+  - url: 'http://localhost:3000'
+    description: Dev
+  - description: Staging
+    url: 'https://stg-seisan-kun-api-v2.herokuapp.com'
+  - url: 'https://prd-seisan-kun-api-v2.com'
+    description: Production
+paths:
+  /travel/info:
+    get:
+      description: 旅行の情報と、参加メンバーを参照するAPI
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  travel:
+                    $ref: '#/components/schemas/Travel'
+                  members:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Member'
+              examples:
+                example-1:
+                  value:
+                    travel:
+                      id: 1
+                      name: 温泉旅行
+                      hash_key: aaabbbcccddd
+                      created_at: '2021-01-01T01:01:01Z'
+                      updated_at: '2021-01-01T01:01:01Z'
+                    members:
+                      - id: 1
+                        name: nooboolean
+                        created_at: '2021-01-01T01:01:01Z'
+                        updated_at: '2021-01-01T01:01:01Z'
+                      - id: 2
+                        name: Jump 半在
+                        created_at: '2021-01-01T01:01:01Z'
+                        updated_at: '2021-01-01T01:01:01Z'
+                      - id: 3
+                        name: nakazaway
+                        created_at: '2021-01-01T01:01:01Z'
+                        updated_at: '2021-01-01T01:01:01Z'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+      operationId: get-travel-info
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: hash_key
+          description: 旅行を一意に表すkey
+          required: true
+  /payment/history:
+    get:
+      description: 指定した旅行の支払い情報をすべて参照するAPI
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Payment'
+              examples:
+                example-1:
+                  value:
+                    payments:
+                      - id: 1
+                        travel_id: 1
+                        payer_id: 1
+                        title: ホテル代
+                        amount: 10000
+                        created_at: '2021-01-01T01:01:01Z'
+                        updated_at: '2021-01-01T01:01:01Z'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+      operationId: get-payment-history
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: hash_key
+          description: 旅行を一意に表すkey
+          required: true
+    parameters: []
+  /payment/show:
+    get:
+      description: 指定した支払いの情報を参照するAPI
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment:
+                    $ref: '#/components/schemas/Payment'
+              examples:
+                example-1:
+                  value:
+                    payment:
+                      id: 1
+                      travel_id: 1
+                      payer_id: 1
+                      title: ホテル代
+                      amount: 10000
+                      created_at: '2021-01-01T01:01:01Z'
+                      updated_at: '2021-01-01T01:01:01Z'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+      operationId: get-payment-show
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: payment_id
+          description: 支払い情報のid
+          required: true
+    parameters: []
+  /calculation/results:
+    get:
+      description: 指定した旅行の清算結果をすべて参照するAPI
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          $ref: '#/components/responses/CalcResults'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+      operationId: get-calculation-results
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: hash_key
+          description: 旅行を一意に表すkey
+          required: true
+    parameters: []
+  /borrowing/history:
+    parameters: []
+    get:
+      description: 指定したメンバーの貸借履歴をすべて参照するAPI
+      summary: ''
+      tags: []
+      operationId: get-borrowing-history
+      responses:
+        '200':
+          $ref: '#/components/responses/BorrowHistories'
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: member_id
+          description: メンバーのid
+          required: true
+  /borrowing/statuses:
+    get:
+      description: 指定した旅行の貸借状況をすべて参照するAPI
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          $ref: '#/components/responses/BorrowStatuses'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+      operationId: get-borrowing-statuses
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: hash_key
+          description: 旅行を一意に表すkey
+          required: true
+    parameters: []
+  /travel/register:
+    parameters: []
+    post:
+      description: 旅行を新規作成するAPI
+      summary: ''
+      tags: []
+      operationId: post-travel-register
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hash_key:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    hash_key: aaaabbbbccccdddd
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                example-1:
+                  value:
+                    error:
+                      message: 認証に失敗しました。
+                      detail: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                example-1:
+                  value:
+                    error:
+                      message: アクセスが拒否されました
+                      detail: Forbidden
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                example-1:
+                  value:
+                    error:
+                      message: 内部エラーが発生しました。
+                      detail: Internal Server Error
+      parameters: []
+      requestBody:
+        $ref: '#/components/requestBodies/TravelRegisterRequest'
+  /payment/register:
+    parameters: []
+    post:
+      description: 支払いを追加するAPI
+      summary: ''
+      tags: []
+      operationId: post-payment-register
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment_id:
+                    type: integer
+              examples:
+                example-1:
+                  value:
+                    payment_id: 1
+      requestBody:
+        $ref: '#/components/requestBodies/PaymentRegisterRequest'
+  /member/insert:
+    parameters: []
+    post:
+      description: メンバーを追加するAPI
+      summary: ''
+      tags: []
+      operationId: post-member-insert
+      responses:
+        '200':
+          description: OK
+  /travel/info/update:
+    parameters: []
+    put:
+      description: 指定した旅行の情報を更新するAPI
+      summary: ''
+      tags: []
+      operationId: put-travel-info-update
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hash_key:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    hash_key: aaabbbccccdddd
+      parameters: []
+      requestBody:
+        $ref: '#/components/requestBodies/TravelUpdateRequest'
+  /payment/update:
+    parameters: []
+    put:
+      description: 指定した支払いの情報を更新するAPI
+      summary: ''
+      tags: []
+      operationId: put-payment-update
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment_id:
+                    type: integer
+              examples:
+                example-1:
+                  value:
+                    payment_id: 1
+      requestBody:
+        $ref: '#/components/requestBodies/PaymentUpdateRequest'
+  /travel/info/delete:
+    parameters: []
+    delete:
+      description: 指定した旅行の情報を削除するAPI
+      summary: ''
+      tags: []
+      operationId: delete-travel-info-delete
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    message: success
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: hash_key
+          description: 旅行を一意に表すkey
+          required: true
+  /member/delete:
+    parameters: []
+    delete:
+      description: 指定したメンバーを旅行から削除するAPI
+      summary: ''
+      tags: []
+      operationId: delete-member-delete
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    message: success
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: member_id
+          description: memberのID
+          required: true
+  /payment/delete:
+    parameters: []
+    delete:
+      description: 指定した支払いの情報を削除するAPI
+      summary: ''
+      tags: []
+      operationId: delete-payment-delete
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    message: success
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: payment_id
+          description: paymentのID
+          required: true
+components:
+  schemas:
+    Travel:
+      title: Travel
+      type: object
+      description: ''
+      x-internal: false
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given user.
+        hash_key:
+          type: string
+        name:
+          type: string
+        created_at:
+          type: string
+          description: Set to true if the user's email has been verified.
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: The date that the user was created.
+          readOnly: true
+      required:
+        - id
+        - hash_key
+        - name
+        - created_at
+        - updated_at
+      x-examples:
+        example-1:
+          id: 1
+          name: 温泉旅行
+          created_at: '2021-01-01T01:01:01Z'
+          updated_at: '2021-01-01T01:01:01Z'
+    Error:
+      title: Error
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            detail:
+              type: string
+    Member:
+      title: Member
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - id
+        - name
+        - created_at
+        - updated_at
+      x-examples:
+        example-1:
+          id: 1
+          name: nooboolean
+          created_at: '2021-01-01T01:01:01Z'
+          updated_at: '2021-01-01T01:01:01Z'
+    Payment:
+      title: Payment
+      type: object
+      properties:
+        id:
+          type: integer
+        travel_id:
+          type: integer
+        payer_id:
+          type: integer
+        title:
+          type: string
+        amount:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - id
+        - travel_id
+        - payer_id
+        - amount
+        - created_at
+        - updated_at
+      x-examples:
+        example-1:
+          id: 1
+          travel_id: 1
+          payer_id: 1
+          title: ホテル代
+          amount: 10000
+          created_at: '2021-01-01T01:01:01Z'
+          updated_at: '2021-01-01T01:01:01Z'
+  requestBodies:
+    TravelRegisterRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              members:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+              travel:
+                type: object
+                required:
+                  - name
+                properties:
+                  name:
+                    type: string
+            required:
+              - members
+              - travel
+          examples:
+            example-1:
+              value:
+                members:
+                  - id: 1
+                    name: nooboolean
+                  - id: 2
+                    name: Jump 半在
+                  - id: 3
+                    name: nakazaway
+                travel:
+                  name: 温泉旅行
+        application/xml:
+          schema:
+            type: object
+            properties: {}
+      description: ''
+    PaymentRegisterRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              payment:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  travel_id:
+                    type: string
+                  payer_id:
+                    type: integer
+                  title:
+                    type: string
+                  amount:
+                    type: integer
+          examples:
+            example-1:
+              value:
+                payment:
+                  id: 1
+                  travel_id: aaabbbcccddd
+                  payer_id: 1
+                  title: 高速代
+                  amount: 3000
+    TravelUpdateRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              travel:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+            required:
+              - travel
+          examples:
+            example-1:
+              value:
+                travel:
+                  id: 1
+                  name: 九州旅行
+    PaymentUpdateRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              payment:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  travel_id:
+                    type: string
+                  payer_id:
+                    type: integer
+                  title:
+                    type: string
+                  amount:
+                    type: integer
+            required:
+              - payment
+          examples:
+            example-1:
+              value:
+                payment:
+                  id: 1
+                  travel_id: aaaabbbbccccdddd
+                  payer_id: 1
+                  title: ホテル代
+                  amount: 10000
+  responses:
+    BorrowStatuses:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statuses:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    member:
+                      $ref: '#/components/schemas/Member'
+                    borrow_money:
+                      type: number
+          examples:
+            example-1:
+              value:
+                statuses:
+                  - member:
+                      id: 1
+                      name: nooboolean
+                      created_at: '2021-01-01T01:01:01Z'
+                      updated_at: '2021-01-01T01:01:01Z'
+                    borrow_money: 100.989
+                  - member:
+                      id: 2
+                      name: Jump 半在
+                      created_at: '2021-01-01T01:01:01Z'
+                      updated_at: '2021-01-01T01:01:01Z'
+                    borrow_money: 1231.566
+                  - member:
+                      id: 3
+                      name: nakazaway
+                      created_at: '2021-01-01T01:01:01Z'
+                      updated_at: '2021-01-01T01:01:01Z'
+                    borrow_money: -12312.098
+    BorrowHistories:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              histories:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    payment:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        borrow_money:
+                          type: number
+                    user:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+          examples:
+            example-1:
+              value:
+                histories:
+                  - payment:
+                      title: ホテル代
+                      borrow_money: 10000
+                    user:
+                      name: Jump　半在
+                  - payment:
+                      title: 高速代
+                      borrow_money: -909.987
+                    user:
+                      name: Jump　半在
+    CalcResults:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              results:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    borrower_name:
+                      type: string
+                    lender_name:
+                      type: string
+                    borrow_money:
+                      type: number
+          examples:
+            example-1:
+              value:
+                results:
+                  - borrower_name: Jump 半在
+                    lender_name: nooboolean
+                    borrow_money: 1000
+                  - borrower_name: Jump 半在
+                    lender_name: nakazaway
+                    borrow_money: 3000.897
+    Error:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              detail:
+                type: string
+          examples:
+            example-1:
+              value:
+                message: 認証に失敗しました
+                detail: Unauthorized
