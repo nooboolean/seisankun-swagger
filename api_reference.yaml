@@ -40,7 +40,7 @@ paths:
                     travel:
                       id: 1
                       name: 温泉旅行
-                      hash_key: aaabbbcccddd
+                      travel_key: aaabbbcccddd
                       created_at: '2021-01-01T01:01:01Z'
                       updated_at: '2021-01-01T01:01:01Z'
                     members:
@@ -69,7 +69,7 @@ paths:
         - schema:
             type: string
           in: query
-          name: hash_key
+          name: travel_key
           description: 旅行を一意に表すkey
           required: true
     parameters: []
@@ -85,14 +85,14 @@ paths:
               schema:
                 type: object
                 properties:
-                  hash_key:
+                  travel_key:
                     type: string
                 required:
-                  - hash_key
+                  - travel_key
               examples:
                 example-1:
                   value:
-                    hash_key: aaaabbbbccccdddd
+                    travel_key: aaaabbbbccccdddd
         '401':
           $ref: '#/components/responses/Error'
       description: 旅行を新規作成するAPI
@@ -110,12 +110,12 @@ paths:
               schema:
                 type: object
                 properties:
-                  hash_key:
+                  travel_key:
                     type: string
               examples:
                 example-1:
                   value:
-                    hash_key: aaabbbccccdddd
+                    travel_key: aaabbbccccdddd
         '401':
           $ref: '#/components/responses/Error'
       description: 指定した旅行の情報を更新するAPI
@@ -144,7 +144,7 @@ paths:
         - schema:
             type: string
           in: query
-          name: hash_key
+          name: travel_key
           description: 旅行を一意に表すkey
           required: true
   /payment/history:
@@ -154,27 +154,7 @@ paths:
       tags: []
       responses:
         '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  payments:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Payment'
-              examples:
-                example-1:
-                  value:
-                    payments:
-                      - id: 1
-                        travel_id: 1
-                        payer_id: 1
-                        title: ホテル代
-                        amount: 10000
-                        created_at: '2021-01-01T01:01:01Z'
-                        updated_at: '2021-01-01T01:01:01Z'
+          $ref: '#/components/responses/PaymentHistories'
         '401':
           $ref: '#/components/responses/Error'
         '403':
@@ -188,7 +168,7 @@ paths:
         - schema:
             type: string
           in: query
-          name: hash_key
+          name: travel_key
           description: 旅行を一意に表すkey
           required: true
     parameters: []
@@ -199,25 +179,7 @@ paths:
       tags: []
       responses:
         '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  payment:
-                    $ref: '#/components/schemas/Payment'
-              examples:
-                example-1:
-                  value:
-                    payment:
-                      id: 1
-                      travel_id: 1
-                      payer_id: 1
-                      title: ホテル代
-                      amount: 10000
-                      created_at: '2021-01-01T01:01:01Z'
-                      updated_at: '2021-01-01T01:01:01Z'
+          $ref: '#/components/responses/Payment'
         '401':
           $ref: '#/components/responses/Error'
         '403':
@@ -326,7 +288,7 @@ paths:
         - schema:
             type: string
           in: query
-          name: hash_key
+          name: travel_key
           description: 旅行を一意に表すkey
           required: true
     parameters: []
@@ -368,7 +330,7 @@ paths:
         - schema:
             type: string
           in: query
-          name: hash_key
+          name: travel_key
           description: 旅行を一意に表すkey
           required: true
     parameters: []
@@ -434,7 +396,7 @@ components:
         id:
           type: integer
           description: Unique identifier for the given user.
-        hash_key:
+        travel_key:
           type: string
         name:
           type: string
@@ -450,13 +412,14 @@ components:
           readOnly: true
       required:
         - id
-        - hash_key
+        - travel_key
         - name
         - created_at
         - updated_at
       x-examples:
         example-1:
           id: 1
+          travel_key: aaaabbbbccccdddd
           name: 温泉旅行
           created_at: '2021-01-01T01:01:01Z'
           updated_at: '2021-01-01T01:01:01Z'
@@ -485,44 +448,6 @@ components:
         example-1:
           id: 1
           name: nooboolean
-          created_at: '2021-01-01T01:01:01Z'
-          updated_at: '2021-01-01T01:01:01Z'
-    Payment:
-      title: Payment
-      type: object
-      properties:
-        id:
-          type: integer
-        travel_id:
-          type: integer
-        payer_id:
-          type: integer
-        title:
-          type: string
-        amount:
-          type: integer
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-      required:
-        - id
-        - travel_id
-        - payer_id
-        - amount
-        - created_at
-        - updated_at
-      x-examples:
-        example-1:
-          id: 1
-          travel_id: 1
-          payer_id: 1
-          title: ホテル代
-          amount: 10000
           created_at: '2021-01-01T01:01:01Z'
           updated_at: '2021-01-01T01:01:01Z'
   requestBodies:
@@ -572,9 +497,7 @@ components:
               payment:
                 type: object
                 properties:
-                  id:
-                    type: integer
-                  travel_id:
+                  travel_key:
                     type: string
                   payer_id:
                     type: integer
@@ -583,7 +506,7 @@ components:
                     items:
                       type: object
                       properties:
-                        member_id:
+                        borrower_id:
                           type: integer
                   title:
                     type: string
@@ -593,12 +516,11 @@ components:
             example-1:
               value:
                 payment:
-                  id: 1
-                  travel_id: aaabbbcccddd
+                  travel_key: aaabbbcccddd
                   payer_id: 1
                   borrowers:
-                    - member_id: 1
-                    - member_id: 2
+                    - borrower_id: 1
+                    - borrower_id: 2
                   title: 高速代
                   amount: 3000
     TravelUpdateRequest:
@@ -633,7 +555,7 @@ components:
                 properties:
                   id:
                     type: integer
-                  travel_id:
+                  travel_key:
                     type: string
                   payer_id:
                     type: integer
@@ -642,7 +564,7 @@ components:
                     items:
                       type: object
                       properties:
-                        member_id:
+                        borrower_id:
                           type: integer
                   title:
                     type: string
@@ -655,11 +577,11 @@ components:
               value:
                 payment:
                   id: 1
-                  travel_id: aaaabbbbccccdddd
+                  travel_key: aaaabbbbccccdddd
                   payer_id: 1
                   borrowers:
-                    - member_id: 1
-                    - member_id: 2
+                    - borrower_id: 1
+                    - borrower_id: 2
                   title: ホテル代
                   amount: 10000
     MemberInsertRequest:
@@ -671,7 +593,7 @@ components:
               travel:
                 type: object
                 properties:
-                  hash_key:
+                  travel_key:
                     type: string
               member:
                 type: object
@@ -682,7 +604,7 @@ components:
             example-1:
               value:
                 travel:
-                  hash_key: aaaabbbbccccdddd
+                  travel_key: aaaabbbbccccdddd
                 member:
                   name: Jump 半在
   responses:
@@ -810,3 +732,94 @@ components:
                 error:
                   message: string
                   detail: string
+    PaymentHistories:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              payments:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    travel_key:
+                      type: string
+                    payer_id:
+                      type: integer
+                    payer_name:
+                      type: string
+                    title:
+                      type: string
+                    amount:
+                      type: integer
+                    created_at:
+                      type: string
+                      format: date-time
+                    updated_at:
+                      type: string
+                      format: date-time
+          examples:
+            example-1:
+              value:
+                payments:
+                  - id: 1
+                    travel_key: aaabbbcccddd
+                    payer_id: 1
+                    payer_name: Jump 半在
+                    title: 高速代
+                    amount: 3000
+                    created_at: '2021-01-01T01:01:01Z'
+                    updated_at: '2021-01-01T01:01:01Z'
+    Payment:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              payment:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  travel_key:
+                    type: string
+                  payer_id:
+                    type: integer
+                  borrowers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        borrower_id:
+                          type: integer
+                        borrower_name:
+                          type: string
+                  title:
+                    type: string
+                  amount:
+                    type: integer
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+          examples:
+            example-1:
+              value:
+                payment:
+                  id: 1
+                  travel_key: aaaabbbbccccdddd
+                  payer_id: 1
+                  borrowers:
+                    - borrower_id: 1
+                      borrower_name: Jump 半在
+                  title: 高速代
+                  amount: 3000
+                  created_at: '2021-01-01T01:01:01Z'
+                  updated_at: '2021-01-01T01:01:01Z'
