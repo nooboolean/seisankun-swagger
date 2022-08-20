@@ -56,6 +56,8 @@ paths:
                         name: nakazaway
                         created_at: '2021-01-01T01:01:01Z'
                         updated_at: '2021-01-01T01:01:01Z'
+        '400':
+          $ref: '#/components/responses/Error'
         '401':
           $ref: '#/components/responses/Error'
         '403':
@@ -63,6 +65,10 @@ paths:
         '404':
           $ref: '#/components/responses/Error'
         '500':
+          $ref: '#/components/responses/Error'
+        '502':
+          $ref: '#/components/responses/Error'
+        '503':
           $ref: '#/components/responses/Error'
       operationId: get-travel
       parameters:
@@ -93,7 +99,19 @@ paths:
                 example-1:
                   value:
                     travel_key: aaaabbbbccccdddd
+        '400':
+          $ref: '#/components/responses/Error'
         '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+        '502':
+          $ref: '#/components/responses/Error'
+        '503':
           $ref: '#/components/responses/Error'
       description: 旅行を新規作成するAPI
       requestBody:
@@ -116,7 +134,19 @@ paths:
                 example-1:
                   value:
                     travel_key: aaabbbccccdddd
+        '400':
+          $ref: '#/components/responses/Error'
         '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+        '502':
+          $ref: '#/components/responses/Error'
+        '503':
           $ref: '#/components/responses/Error'
       description: 指定した旅行の情報を更新するAPI
       requestBody:
@@ -139,6 +169,20 @@ paths:
                 example-1:
                   value:
                     message: success
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+        '502':
+          $ref: '#/components/responses/Error'
+        '503':
+          $ref: '#/components/responses/Error'
       description: 指定した旅行の情報を削除するAPI
       parameters:
         - schema:
@@ -155,6 +199,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/PaymentHistories'
+        '400':
+          $ref: '#/components/responses/Error'
         '401':
           $ref: '#/components/responses/Error'
         '403':
@@ -162,6 +208,10 @@ paths:
         '404':
           $ref: '#/components/responses/Error'
         '500':
+          $ref: '#/components/responses/Error'
+        '502':
+          $ref: '#/components/responses/Error'
+        '503':
           $ref: '#/components/responses/Error'
       operationId: get-payment-history
       parameters:
@@ -180,6 +230,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/Payment'
+        '400':
+          $ref: '#/components/responses/Error'
         '401':
           $ref: '#/components/responses/Error'
         '403':
@@ -187,6 +239,10 @@ paths:
         '404':
           $ref: '#/components/responses/Error'
         '500':
+          $ref: '#/components/responses/Error'
+        '502':
+          $ref: '#/components/responses/Error'
+        '503':
           $ref: '#/components/responses/Error'
       operationId: get-payment
       parameters:
@@ -217,6 +273,20 @@ paths:
                 example-1:
                   value:
                     payment_id: 1
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+        '502':
+          $ref: '#/components/responses/Error'
+        '503':
+          $ref: '#/components/responses/Error'
       description: 支払いを追加するAPI
       requestBody:
         $ref: '#/components/requestBodies/PaymentRegisterRequest'
@@ -238,6 +308,20 @@ paths:
                 example-1:
                   value:
                     payment_id: 1
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+        '502':
+          $ref: '#/components/responses/Error'
+        '503':
+          $ref: '#/components/responses/Error'
       description: 指定した支払いの情報を更新するAPI
       requestBody:
         $ref: '#/components/requestBodies/PaymentUpdateRequest'
@@ -259,6 +343,20 @@ paths:
                 example-1:
                   value:
                     message: success
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+        '502':
+          $ref: '#/components/responses/Error'
+        '503':
+          $ref: '#/components/responses/Error'
       description: 指定した支払いの情報を削除するAPI
       parameters:
         - schema:
@@ -275,6 +373,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/CalcResults'
+        '400':
+          $ref: '#/components/responses/Error'
         '401':
           $ref: '#/components/responses/Error'
         '403':
@@ -282,6 +382,10 @@ paths:
         '404':
           $ref: '#/components/responses/Error'
         '500':
+          $ref: '#/components/responses/Error'
+        '502':
+          $ref: '#/components/responses/Error'
+        '503':
           $ref: '#/components/responses/Error'
       operationId: get-calculation-results
       parameters:
@@ -302,6 +406,20 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/BorrowHistories'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+        '502':
+          $ref: '#/components/responses/Error'
+        '503':
+          $ref: '#/components/responses/Error'
       parameters:
         - schema:
             type: integer
@@ -317,6 +435,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/BorrowStatuses'
+        '400':
+          $ref: '#/components/responses/Error'
         '401':
           $ref: '#/components/responses/Error'
         '403':
@@ -324,6 +444,10 @@ paths:
         '404':
           $ref: '#/components/responses/Error'
         '500':
+          $ref: '#/components/responses/Error'
+        '502':
+          $ref: '#/components/responses/Error'
+        '503':
           $ref: '#/components/responses/Error'
       operationId: get-borrowing-statuses
       parameters:
@@ -357,6 +481,20 @@ paths:
                 example-1:
                   value:
                     member_id: 1
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+        '502':
+          $ref: '#/components/responses/Error'
+        '503':
+          $ref: '#/components/responses/Error'
       requestBody:
         $ref: '#/components/requestBodies/MemberInsertRequest'
     delete:
@@ -377,6 +515,20 @@ paths:
                 example-1:
                   value:
                     message: success
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+        '502':
+          $ref: '#/components/responses/Error'
+        '503':
+          $ref: '#/components/responses/Error'
       description: 指定したメンバーを旅行から削除するAPI
       parameters:
         - schema:
@@ -622,7 +774,7 @@ components:
                   properties:
                     member:
                       $ref: '#/components/schemas/Member'
-                    borrow_money:
+                    lend_borrow_money:
                       type: number
           examples:
             example-1:
@@ -633,19 +785,19 @@ components:
                       name: nooboolean
                       created_at: '2021-01-01T01:01:01Z'
                       updated_at: '2021-01-01T01:01:01Z'
-                    borrow_money: 100.989
+                    lend_borrow_money: 100.989
                   - member:
                       id: 2
                       name: Jump 半在
                       created_at: '2021-01-01T01:01:01Z'
                       updated_at: '2021-01-01T01:01:01Z'
-                    borrow_money: 1231.566
+                    lend_borrow_money: 1231.566
                   - member:
                       id: 3
                       name: nakazaway
                       created_at: '2021-01-01T01:01:01Z'
                       updated_at: '2021-01-01T01:01:01Z'
-                    borrow_money: -12312.098
+                    lend_borrow_money: -12312.098
     BorrowHistories:
       description: Example response
       content:
@@ -653,19 +805,40 @@ components:
           schema:
             type: object
             properties:
-              histories:
+              lend_histories:
                 type: array
                 items:
                   type: object
                   properties:
-                    payment:
+                    lend:
                       type: object
                       properties:
                         title:
                           type: string
-                        borrow_money:
+                        money:
                           type: number
-                    user:
+                        payment_id:
+                          type: integer
+                    payer:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+              borrow_histories:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    borrow:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        money:
+                          type: number
+                        payment_id:
+                          type: integer
+                    payer:
                       type: object
                       properties:
                         name:
@@ -673,17 +846,26 @@ components:
           examples:
             example-1:
               value:
-                histories:
-                  - payment:
+                lend_histories:
+                  - lend:
                       title: ホテル代
-                      borrow_money: 10000
-                    user:
+                      money: 10000
+                      payment_id: 123
+                    payer:
                       name: Jump　半在
-                  - payment:
+                borrow_histories:
+                  - borrow:
                       title: 高速代
-                      borrow_money: -909.987
-                    user:
-                      name: Jump　半在
+                      money: 333.333
+                      payment_id: 124
+                    payer:
+                      name: nakazaway
+                  - borrow:
+                      title: 夜飯代
+                      money: 1029.234
+                      payment_id: 125
+                    payer:
+                      name: yseki
     CalcResults:
       description: Example response
       content:
@@ -724,14 +906,11 @@ components:
                 properties:
                   message:
                     type: string
-                  detail:
-                    type: string
           examples:
             example-1:
               value:
                 error:
                   message: string
-                  detail: string
     PaymentHistories:
       description: Example response
       content:
